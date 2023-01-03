@@ -13,11 +13,5 @@ def print_hi(name):
 if __name__ == '__main__':
     print_hi('PyCharm')
 
-print(하 깃허브야..)
-하하하하하
-하하하
-하하
-하
-야야야야야
-아
-fdfaefef
+print('하 깃허브야.. 20230103_15:57')
+
