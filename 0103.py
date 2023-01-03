@@ -13,7 +13,7 @@ cur.execute(sql)
 # 데이타 Fetch
 rows = cur.fetchall()
 
-print(rows)  # 전체 rows
+print(list(rows))  # 전체 rows
 # print(rows[0])  # 첫번째 row: (1, '김정수', 1, '서울')
 # print(rows[1])  # 두번째 row: (2, '강수정', 2, '서울')
 
