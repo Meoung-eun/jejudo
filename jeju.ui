@@ -40,7 +40,7 @@
      <number>0</number>
     </property>
     <property name="columnCount">
-     <number>16</number>
+     <number>17</number>
     </property>
     <column>
      <property name="text">
@@ -120,6 +120,14 @@
     <column>
      <property name="text">
       <string>데이터갱신일자</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="textAlignment">
+      <set>AlignCenter</set>
      </property>
     </column>
    </widget>
