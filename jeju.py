@@ -3,6 +3,8 @@ import sys
 from PyQt5.QtWidgets import *
 from PyQt5 import uic
 from jejuForm import Add
+from PyQt5 import QtWidgets, QtCore
+
 
 form_class = uic.loadUiType("jeju.ui")[0]  # ui연결
 
@@ -12,10 +14,12 @@ class MainWindow(QMainWindow, form_class): #화면을 띄우는데 사용되는 
         self.setupUi(self)
         self.table_widget_create()
         self.btn_search.clicked.connect(self.search)
+        self.btn_edit.clicked.connect(self.edit)
 
 
 
     def table_widget_create(self):
+        self.checkboxList = []  # 체크박스 넣을 빈 리스트 만들기
         ## sql파일 커넥트
         conn = pymysql.connect(host='localhost', user='root', password='0000', db='jejudo', charset='utf8')   # password 변경 해주세요
         ## conn로부터  결과를 얻어올 때 사용할 Cursor 생성
@@ -30,15 +34,36 @@ class MainWindow(QMainWindow, form_class): #화면을 띄우는데 사용되는 
         rows = cur.fetchall()
         # print(rows) # 튜플안에 튜플로 전체 데이터를 불러온다.
         self.table.setRowCount(len(rows)) # 테이블의 행 갯수를 rows의 길이로 정함
-        self.table.setColumnCount(len(rows[0]))  # 테이블의 열 갯수를 row의 길이로 정함
+        self.table.setColumnCount(len(rows[0])+1)  # 테이블의 열 갯수를 rows[0]의 길이로 정함
 
+        # 데이터베이스 전체를 테이블에 넣어주는 반복문
         for i in range(len(rows)):
             for j in range(len(rows[0])):
                 self.table.setItem(i, j, QTableWidgetItem(str(rows[i][j])))
+
+
+        # 체크박스 리스트 데이터 갯수만큼 만들어줌
+        for i in range(len(rows)):
+            ckBox = QCheckBox()
+            self.checkboxList.append(ckBox)
+
+        # 테이블 위젯 마지막 열에 체크박스 넣어줄 반복문
+        for i in range(len(rows)):
+            # cellWidget = QWidget()
+            # layoutCB = QHBoxLayout(cellWidget)
+            # layoutCB.addWidget(self.checkboxList[i])
+            # self.checkboxList[i].setAlignment(QtCore.Qt.self.AlignCenter)
+            # layoutCB.setContentsMargins(0, 0, 0, 0)
+            # cellWidget.setLayout(layoutCB)
+            self.table.setCellWidget(i,16,self.checkboxList[i])
+
+
         # Connection 닫기
         conn.close()
 
     def search(self):
+        self.table_widget_create()
+        self.checkboxList = []  # 체크박스 넣을 빈 리스트 만들기
         self.table.clearContents()
         conn = pymysql.connect(host='localhost', user='root', password='0000', db='jejudo',
                                charset='utf8')
@@ -49,12 +74,34 @@ class MainWindow(QMainWindow, form_class): #화면을 띄우는데 사용되는 
         cur.execute(sql, data2)
         rows = cur.fetchall()
         self.table.setRowCount(len(rows)) # 테이블의 행 갯수를 rows의 길이로 정함
-        self.table.setColumnCount(len(rows[0]))  # 테이블의 열 갯수를 row의 길이로 정함
+        self.table.setColumnCount(len(rows[0])+1)  # 테이블의 열 갯수를 rows[0]의 길이로 정함
+
+        # 데이터베이스 전체를 테이블에 넣어주는 반복문
         for i in range(len(rows)):
-            for j in range(len(rows[i])):
+            for j in range(len(rows[0])):
                 self.table.setItem(i, j, QTableWidgetItem(str(rows[i][j])))
+
+
+        # 체크박스 리스트 데이터 갯수만큼 만들어줌
+        for i in range(len(rows)):
+            ckBox = QCheckBox()
+            self.checkboxList.append(ckBox)
+
+        # 테이블 위젯 마지막 열에 체크박스 넣어줄 반복문
+        for i in range(len(rows)):
+            self.table.setCellWidget(i,16,self.checkboxList[i])
+
+        # Connection 닫기
         conn.commit()
         conn.close()
+
+    def edit(self):
+        print('수정')
+
+
+
+
+
 
 
 if __name__ == "__main__":
