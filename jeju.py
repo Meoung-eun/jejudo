@@ -12,9 +12,12 @@ class MainWindow(QMainWindow, form_class): #화면을 띄우는데 사용되는 
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.table_widget_create()
-        self.btn_search.clicked.connect(self.search)
-        self.btn_edit.clicked.connect(self.edit)
+        self.jejuFormShow = Add()   # Add클래스를 self.jejuFormShow로 선언
+
+        self.table_widget_create()  # 테이블위젯 안에 데이터 생성
+        self.btn_search.clicked.connect(self.search)    # 검색 버튼
+        self.btn_edit.clicked.connect(self.edit)        # 수정 버튼
+        self.btn_add.clicked.connect(self.add)          # 추가 버튼
 
 
 
@@ -97,6 +100,12 @@ class MainWindow(QMainWindow, form_class): #화면을 띄우는데 사용되는 
 
     def edit(self):
         print('수정')
+        self.jejuFormShow.show()    # 수정버튼 누르면 폼창이 뜬다.
+
+    def add(self):
+        print('추가')
+        self.jejuFormShow.show()    # 추가버튼 누르면 폼창이 뜬다.
+
 
 
 
