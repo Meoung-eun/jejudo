@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import *
 from PyQt5 import uic
 from jejuForm import Add
 from PyQt5 import QtWidgets, QtCore
+# from PyQt5.QtCore import Qt
 
 
 form_class = uic.loadUiType("jeju.ui")[0]  # ui연결
@@ -47,8 +48,9 @@ class MainWindow(QMainWindow, form_class): #화면을 띄우는데 사용되는 
 
         # 체크박스 리스트 데이터 갯수만큼 만들어줌
         for i in range(len(rows)):
-            ckBox = QCheckBox()
-            self.checkboxList.append(ckBox)
+            self.ckBox = QCheckBox()
+            self.checkboxList.append(self.ckBox)
+            self.ckBox.pressed.connect(self.changeTitle)
 
         # 테이블 위젯 마지막 열에 체크박스 넣어줄 반복문
         for i in range(len(rows)):
@@ -60,9 +62,19 @@ class MainWindow(QMainWindow, form_class): #화면을 띄우는데 사용되는 
             # cellWidget.setLayout(layoutCB)
             self.table.setCellWidget(i,16,self.checkboxList[i])
 
-
         # Connection 닫기
         conn.close()
+
+
+    def changeTitle(self):
+        checkbox = self.sender()
+        print(checkbox)
+        item = self.table.indexAt(checkbox.pos())
+        print(item)
+        print(self.table.item(item.row(),0).text())
+
+
+
 
     def search(self):
         self.table_widget_create()
@@ -100,11 +112,29 @@ class MainWindow(QMainWindow, form_class): #화면을 띄우는데 사용되는 
 
     def edit(self):
         print('수정')
-        self.jejuFormShow.show()    # 수정버튼 누르면 폼창이 뜬다.
+        self.jejuFormShow.show()    # 수정버튼 누르면 폼창이 뜬다.  구현 - 은희
+
+    def checkFuction(self):
+        print('123')
+
+
+
+    def checkbox_change(self, checkvalue):
+        chbox = self.sender()
+        print("checkbox sender row = ", chbox.get_row())
+
+
+
+
+
+
+
+
 
     def add(self):
         print('추가')
-        self.jejuFormShow.show()    # 추가버튼 누르면 폼창이 뜬다.
+        self.jejuFormShow.show()    # 추가버튼 누르면 폼창이 뜬다.  구현 - 명은
+
 
 
 
