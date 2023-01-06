@@ -105,22 +105,24 @@ class MainWindow(QMainWindow, form_class): #화면을 띄우는데 사용되는 
         self.bs_typeA = self.jejuFormShow.Business_typeA.text()
         self.bs_typeB = self.jejuFormShow.Business_typeB.text()
         self.auth_date = self.jejuFormShow.Authorized_date.text()
-        self.cel_date = self.jejuFormShow.Cancel_date.text()
-        self.State = self.jejuFormShow.State.text()
-        self.st_detail = self.jejuFormShow.state_detail.text()
-        self.clo_date = self.jejuFormShow.closing_date.text()
-        self.vac_start_date = self.jejuFormShow.vacation_start_date.text()
-        self.vac_end_date = self.jejuFormShow.vacation_end_date.text()
-        self.rest_date = self.jejuFormShow.restarting_date.text()
-        self.regi_square = self.jejuFormShow.region_square.text()
-        self.fu_address = self.jejuFormShow.full_address.text()
-        self.fu_address_new = self.jejuFormShow.full_address_new.text()
-        self.po = self.jejuFormShow.post.text()
-        self.upda_date = self.jejuFormShow.updated_date.text()
+        # self.cel_date = self.jejuFormShow.Cancel_date.text()
+        # self.State = self.jejuFormShow.State.text()
+        # self.st_detail = self.jejuFormShow.state_detail.text()
+        # self.clo_date = self.jejuFormShow.closing_date.text()
+        # self.vac_start_date = self.jejuFormShow.vacation_start_date.text()
+        # self.vac_end_date = self.jejuFormShow.vacation_end_date.text()
+
+        # self.rest_date = self.jejuFormShow.restarting_date.text()
+        # self.regi_square = self.jejuFormShow.region_square.text()
+        # self.fu_address = self.jejuFormShow.full_address.text()
+        # self.fu_address_new = self.jejuFormShow.full_address_new.text()
+        # self.po = self.jejuFormShow.post.text()
+        # self.upda_date = self.jejuFormShow.updated_date.text()
 
         confu = pymysql.connect(host='localhost', user='root', password='160072', db='jejudo', charset='utf8')
         curr = confu.cursor()
         curr.execute(f"INSERT INTO jejudo.jeju_table(Restaurant_name, Business_typeA, Business_typeB, Authorized_date ) VALUES ('{self.rs_name}', '{self.bs_typeA}', '{self.bs_typeB}', '{self.auth_date}')")
+        confu.commit()
         curr.execute("update jeju_table set jeju_table.Restaurant_name = "" where jeju_table.Restaurant_name is NULL")
         curr.execute("update jeju_table set jeju_table.Business_typeA = "" where jeju_table.Business_typeA is NULL")
         curr.execute("update jeju_table set jeju_table.Business_typeB = "" where jeju_table.Business_typeB is NULL")
@@ -140,13 +142,13 @@ class MainWindow(QMainWindow, form_class): #화면을 띄우는데 사용되는 
 
 
         # 데이터를 sql에 반영
-        confu.commit()
+
         # Connection 닫기
-        confu.close()
+        # confu.close()
         # 테이블 헤더를 제외한 데이터 삭제
-        self.table.clearContents()
+        # self.table.clearContents()
         # 테이블 안에 데이터 생성
-        self.table_widget_create()
+        # self.table_widget_create()
 
     def buttonFunction(self):
         print("btn_save Clicked")
