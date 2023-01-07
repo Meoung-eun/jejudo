@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import *
 from PyQt5 import uic
 from jejuForm import Add
 from PyQt5 import QtWidgets, QtCore
-# from PyQt5.QtCore import Qt
+from PyQt5.QtCore import QCoreApplication   # 창 닫기를 위한 모듈에서 클래스 불러오기
 
 
 form_class = uic.loadUiType("jeju.ui")[0]  # ui연결
@@ -24,9 +24,9 @@ class MainWindow(QMainWindow, form_class): #화면을 띄우는데 사용되는 
         self.btn_search.clicked.connect(self.search)    # 검색 버튼
         self.btn_edit.clicked.connect(self.edit)        # 수정 버튼
         self.btn_add.clicked.connect(self.add)          # 추가 버튼
-        self.jejuFormShow.btn_save.clicked.connect(self.editSave) # jeju폼 안에 있는 수정-저장버튼
+        self.jejuFormShow.btn_edit.clicked.connect(self.editSave) # jeju폼 안에 있는 수정-저장버튼
         self.btn_del.clicked.connect(self.del_pressed)  # 삭제 버튼
-        # self.jejuFormShow.btn_save.clicked.connect(self.addSave) # jeju폼 안에 있는 추가-저장버튼 # 터진다!!!!!!
+        self.jejuFormShow.btn_add.clicked.connect(self.addSave) # jeju폼 안에 있는 추가-저장버튼
 
 
 
@@ -198,6 +198,7 @@ class MainWindow(QMainWindow, form_class): #화면을 띄우는데 사용되는 
 
         if len(self.item_list) == 1:     # 아이템 리스트의 길이가 1개 일 때 수정 할 수 있는 것 구현
             self.jejuFormShow.show()    # 수정버튼 누르면 폼창이 뜬다.  구현 - 은희
+            self.jejuFormShow.stackedWidget.setCurrentIndex(1)
             print('수정')
             print(f'사업장명 = \'{self.checked_list[0]}\', full_address = \'{self.checked_list[12]}\' 에 해당되는 데이터가 수정됩니다.')
             for i in range(len(self.lineEditli)):
@@ -234,7 +235,7 @@ class MainWindow(QMainWindow, form_class): #화면을 띄우는데 사용되는 
                             restarting_date = '{self.rest_date.text()}', region_square = '{self.regi_square.text()}',\
                             full_address = '{self.fu_address.text()}', full_address_new = '{self.fu_address_new.text()}',\
                             post = '{self.po.text()}', updated_date = '{self.upda_date.text()}'\
-                            WHERE full_address = '{item[12]}'")
+                            WHERE Restaurant_name = '{item[0]}'")
         cur.execute("select * from jejudo.jeju_table")
 
         # 데이터를 sql에 반영
@@ -247,63 +248,60 @@ class MainWindow(QMainWindow, form_class): #화면을 띄우는데 사용되는 
         self.table_widget_create()
         # self.search()
         self.item_list.clear()
+        # 제주폼 닫기
+        self.jejuFormShow.close()
 
 
     def add(self):
         print('추가')
         self.jejuFormShow.show()    # 추가버튼 누르면 폼창이 뜬다.  구현 - 명은
+        self.jejuFormShow.stackedWidget.setCurrentIndex(0)  # 0번스택이 추가
 
 
 
     def addSave(self):
-        print("hello")
-        conn = pymysql.connect(host='localhost', user='root', password='0000', db='jejudo', charset='utf8')
-        cur = conn.cursor()
-        # # SQL문 실행
-        # cur.execute(f"INSERT INTO jejudo.jeju_table (Restaurant_name, Business_typeA, Business_typeB,\
-        #              Authorized_date, Cancel_date, State, state_detail, closing_date, vacation_start_date,\
-        #             vacation_end_date, restarting_date, region_square, full_address, full_address_new,\
-        #             post, updated_date )\
-        #             VALUES ('{self.rs_name.text()}', '{self.bs_typeA.text()}', '{self.bs_typeB.text()}',\
-        #                     '{self.auth_date.text()}', '{self.cel_date.text()}', '{self.State.text()}'\
-        #                      , '{self.st_detail.text()}', '{self.clo_date.text()}', '{self.vac_start_date.text()}'\
-        #                      , '{self.vac_end_date.text()}', '{self.rest_date.text()}', '{self.regi_square.text()}'\
-        #                      , '{self.fu_address.text()}', '{self.fu_address_new.text()}', '{self.po.text()}'\
-        #                      , '{self.upda_date.text()}')")
-        # SQL문 실행
-        cur.execute(f"INSERT INTO jejudo.jeju_table \
-                            VALUES ('{self.rs_name.text()}', '{self.bs_typeA.text()}', '{self.bs_typeB.text()}',\
-                                    '{self.auth_date.text()}', '{self.cel_date.text()}', '{self.State.text()}'\
-                                     , '{self.st_detail.text()}', '{self.clo_date.text()}', '{self.vac_start_date.text()}'\
-                                     , '{self.vac_end_date.text()}', '{self.rest_date.text()}', '{self.regi_square.text()}'\
-                                     , '{self.fu_address.text()}', '{self.fu_address_new.text()}', '{self.po.text()}'\
-                                     , '{self.upda_date.text()}')")
-        # cur.execute("update jeju_table set jeju_table.Restaurant_name = " " where jeju_table.Restaurant_name is NULL")
-        # cur.execute("update jeju_table set jeju_table.Business_typeA = " " where jeju_table.Business_typeA is NULL")
-        # cur.execute("update jeju_table set jeju_table.Business_typeB = " " where jeju_table.Business_typeB is NULL")
-        # cur.execute("update jeju_table set jeju_table.Authorized_date = " " where jeju_table.Authorized_date is NULL")
-        # cur.execute("update jeju_table set jeju_table.Cancel_date = " " where jeju_table.Cancel_date is NULL")
-        # cur.execute("update jeju_table set jeju_table.state = " " where jeju_table.state is NULL")
-        # cur.execute("update jeju_table set jeju_table.state_detail = " " where jeju_table.state_detail is NULL")
-        # cur.execute("update jeju_table set jeju_table.closing_date = " " where jeju_table.closing_date is NULL")
-        # cur.execute("update jeju_table set jeju_table.vacation_start_date = " " where jeju_table.vacation_start_date is NULL")  #
-        # cur.execute("update jeju_table set jeju_table.vacation_end_date = " " where jeju_table.vacation_end_date is NULL")
-        # cur.execute("update jeju_table set jeju_table.restarting_date = " " where jeju_table.restarting_date is NULL")
-        # cur.execute("update jeju_table set jeju_table.region_square = " " where jeju_table.region_square is NULL")
-        # cur.execute("update jeju_table set jeju_table.full_address = " " where jeju_table.full_address is NULL")
 
-        # cur.execute(WHERE IS NULL(f"UPDATE SET jejudo.jeju_table(Restaurant_name, Business_typeA, Business_typeB, Authorized_date ) VALUES ('{self.rs_name}', '{self.bs_typeA}', '{self.bs_typeB}', '{self.auth_date}'))
-        cur.execute("select * from jejudo.jeju_table")
+        self.rs_name = self.jejuFormShow.Restaurant_name.text()
+        self.bs_typeA = self.jejuFormShow.Business_typeA.text()
+        self.bs_typeB = self.jejuFormShow.Business_typeB.text()
+        self.auth_date = self.jejuFormShow.Authorized_date.text()
+        self.cel_date = self.jejuFormShow.Cancel_date.text()
+        self.State = self.jejuFormShow.State.text()
+        self.st_detail = self.jejuFormShow.state_detail.text()
+        self.clo_date = self.jejuFormShow.closing_date.text()
+        self.vac_start_date = self.jejuFormShow.vacation_start_date.text()
+        self.vac_end_date = self.jejuFormShow.vacation_end_date.text()
+        self.rest_date = self.jejuFormShow.restarting_date.text()
+        self.regi_square = self.jejuFormShow.region_square.text()
+        self.fu_address = self.jejuFormShow.full_address.text()
+        self.fu_address_new = self.jejuFormShow.full_address_new.text()
+        self.po = self.jejuFormShow.post.text()
+        self.upda_date = self.jejuFormShow.updated_date.text()
+
+        confu = pymysql.connect(host='localhost', user='root', password='0000', db='jejudo', charset='utf8')
+        curr = confu.cursor()
+        print("hello")
+        curr.execute(f"INSERT INTO jejudo.jeju_table(Restaurant_name, Business_typeA, Business_typeB, Authorized_date, Cancel_date, State, state_detail, \
+                    closing_date, vacation_start_date, vacation_end_date, restarting_date, region_square, full_address, full_address_new, post, updated_date) \
+                    VALUES ('{self.rs_name}', '{self.bs_typeA}', '{self.bs_typeB}', '{self.auth_date}', '{self.cel_date}', '{self.State}', '{self.st_detail}',\
+                            '{self.clo_date}', '{self.vac_start_date}', '{self.vac_end_date}', '{self.rest_date}', '{self.regi_square}', '{self.fu_address}', \
+                            '{self.fu_address_new}', '{self.po}', '{self.upda_date}')")
+
 
         # 데이터를 sql에 반영
-        conn.commit()
+
+
+        curr.execute("select * from jejudo.jeju_table")
+        confu.commit()
         # Connection 닫기
-        conn.close()
+        confu.close()
         # 테이블 헤더를 제외한 데이터 삭제
         self.table.clearContents()
         # 테이블 안에 데이터 생성
-        # self.table_widget_create()
-        self.search()
+        self.table_widget_create()
+        # 제주폼 닫기
+        self.jejuFormShow.close()
+
 
 
 
@@ -320,8 +318,8 @@ class MainWindow(QMainWindow, form_class): #화면을 띄우는데 사용되는 
 
         if self.item_list != []:
             for item in self.item_list:
-                cur.execute(f"DELETE FROM jejudo.jeju_table WHERE full_address = '{item[12]}'") # 아이템의 12번째 값은 소재지전체주소
-                print(item[12])
+                cur.execute(f"DELETE FROM jejudo.jeju_table WHERE Restaurant_name = '{item[0]}'") # 아이템의 0번째 값은 사업자명
+                print(item[0])
         else:
             print('wrong')
             option = QtWidgets.QMessageBox.information(self, "QMessageBox", "체크박스를 선택 해 주세요",
@@ -348,12 +346,9 @@ class MainWindow(QMainWindow, form_class): #화면을 띄우는데 사용되는 
 if __name__ == "__main__":
     # QApplication : 프로그램을 실행시켜주는 클래스
     app = QApplication(sys.argv)
-
     # WindowClass의 인스턴스 생성
     mainWindow = MainWindow()
-
     # 프로그램 화면을 보여주는 코드
     mainWindow.show()
-
     # 프로그램을 이벤트루프로 진입시키는(프로그램을 작동시키는) 코드
     app.exec_()
